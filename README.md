@@ -1,17 +1,34 @@
 Role Name
 =========
-
-A brief description of the role goes here.
+Ansible User Config
 
 Requirements
 ------------
+Redhat
+Centos
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
-
+Installation
+--------------------------
+Use runsetup.yml file as host filerun playbook
+```sh
+$ ansible-playbook /path/runsetup.yml -i /path/inventory.txt
+```
 Role Variables
 --------------
 
+| Variables | Descriptions |
+| ------ | ------ |
+| user_name | Username (default: ansible-admin) |
+| pass_code | passcode (default: admin123) |
+| user_shell | usershell (default: /bin/bash) |
+| ssh_conf_file | .ssh key file (default: '') |
+|ssh_key_auth | allow ssh key auth (default: False) |
+| user_groups | user groups (default: wheel) |
+| user_timezone | user timezone (default: timedatectl set-timezone Asia/Kolkata) |
+| user_enable_passwordless_sudo | user enable passwordless sudo (default: True) |
+
 A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+
 
 Dependencies
 ------------
