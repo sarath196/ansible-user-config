@@ -1,0 +1,56 @@
+---
+# tasks file for ansible-user-config user creations
+
+    - name: Make sure we have all group permissions
+      group:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ user_groups }}"
+      when: user_groups
+
+    - 
+      name: Create a login user
+      user:
+        name: "{{item.user_name}}"
+        password: "{{item.pass_code | password_hash('sha512') }}"
+        groups: "{{user_groups}}"
+        state: present
+        shell: "{{item.user_shell}}" 
+        system: no             
+        createhome: yes     
+      loop: "{{ user_logins }}"   
+      when: user_logins
+
+    - 
+      name: Set time zone
+      command: "{{user_timezone}}"
+
+    - name: Comment PasswordAuthentication no
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: "PasswordAuthentication no"
+        line: "#PasswordAuthentication no"
+
+    - name: Uncomment PasswordAuthentication yes
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: "#PasswordAuthentication yes"
+        line: "PasswordAuthentication yes"
+        backrefs: yes
+
+    -  name: UPdating Sudoers file
+       lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: "^%wheel"
+        line: "%wheel ALL=(ALL)       NOPASSWD: ALL"
+       when: user_enable_passwordless_sudo
+
+    - name: Set up authorized keys for the deployer user
+      authorized_key: 
+        user: "{{item.user_name}}" 
+        key: "files/{{ssh_conf_file}}"
+      loop: "{{user_logins}}"
+      when: ssh_key_auth

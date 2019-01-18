@@ -1,0 +1,23 @@
+---
+# defaults file for ansible-user-config
+user_logins: [
+  {
+    user_name: ansible-admin,
+    pass_code: admin123,
+    user_shell: /bin/bash,
+  },
+  {
+    user_name: db-admin,
+    pass_code: admin123,
+    user_shell: /bin/bash,
+  }
+]
+
+ssh_conf_file: ''
+ssh_key_auth: False
+
+user_groups: [ wheel, ]
+
+user_timezone: timedatectl set-timezone Asia/Kolkata
+
+user_enable_passwordless_sudo: True
